@@ -5,10 +5,20 @@
       "eitri-bifrost": [
         "/tmp/Eitri-llama-bot/node_modules/eitri-bifrost"
       ],
+      "react/jsx-runtime": [
+        "/tmp/Eitri-llama-bot/node_modules/react/jsx-dev-runtime"
+      ],
       "eitri-luminus": [
         "/tmp/Eitri-llama-bot/node_modules/eitri-app-components"
+      ],
+      "react": [
+        "/tmp/Eitri-llama-bot/node_modules/react"
       ]
-    }
+    },
+    "target": "ESNext",
+    "module": "CommonJS",
+    "jsx": "react-native",
+    "resolveJsonModule": true
   },
   "include": [
     "./**/*"
