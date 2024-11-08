@@ -2,17 +2,17 @@
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {
-      "eitri-bifrost": [
-        "/tmp/Eitri-llama-bot/node_modules/eitri-bifrost"
-      ],
-      "react/jsx-runtime": [
-        "/tmp/Eitri-llama-bot/node_modules/react/jsx-dev-runtime"
+      "react": [
+        "/tmp/Eitri-llama-bot/node_modules/react"
       ],
       "eitri-luminus": [
         "/tmp/Eitri-llama-bot/node_modules/eitri-app-components"
       ],
-      "react": [
-        "/tmp/Eitri-llama-bot/node_modules/react"
+      "react/jsx-runtime": [
+        "/tmp/Eitri-llama-bot/node_modules/react/jsx-dev-runtime"
+      ],
+      "eitri-bifrost": [
+        "/tmp/Eitri-llama-bot/node_modules/eitri-bifrost"
       ]
     },
     "target": "ESNext",

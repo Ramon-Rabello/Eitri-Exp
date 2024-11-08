@@ -10,6 +10,7 @@ export default function Home() {
         { role: 'assistant', content: "Você pode me fazer uma pergunta?" },
     ])
     const [input, setInput] = useState('')
+    const [isInputFocused, setIsInputFocused] = useState(false)
 
     // Mock responses for demonstration
     const mockResponses = [
@@ -35,6 +36,8 @@ export default function Home() {
         }, 1000)
     }
 
+    console.log("IS INPUT FOCUSED: " + isInputFocused)
+
     return (
         <Window bottomInset customColor="#0d0d0d" direction="column">
             <View padding="small" gap="10px" direction="column" grow={1} marginTop="large">
@@ -55,7 +58,9 @@ export default function Home() {
                             inputMode="text"
                             value={input}
                             onChange={value => setInput(value)}
-                            placeholder="Digite sua mensagem..."    
+                            placeholder="Type your message..."
+                            onFocus={() => setIsInputFocused(true)}
+                            onBlur={() => setIsInputFocused(false)}
                         />
                         <Touchable onPress={handleSubmit}>
                             <View customColor="#FFFFFF" padding="small" borderRadius="small" direction="row" gap="5px" alignItems="center">

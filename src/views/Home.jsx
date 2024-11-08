@@ -1,3 +1,7 @@
+import { useState, useEffect } from 'react'
+import sendIcon from '../assets/icons/send.svg'
+import { getAiResponse } from 'src/services/AiService'
+
 export default function Home() {
     const [messages, setMessages] = useState([
         { role: 'assistant', content: "Olá! Como posso te ajudar?" },
@@ -10,57 +14,69 @@ export default function Home() {
         { role: 'assistant', content: "Você pode me fazer uma pergunta?" },
     ])
     const [input, setInput] = useState('')
+    const [isInputFocused, setIsInputFocused] = useState(false)
+    const [isLoading, setIsLoading] = useState(false)
+    const [loadingDots, setLoadingDots] = useState('.')
 
-    // Mock responses for demonstration
-    const mockResponses = [
-        "I can help you with that!",
-        "That's an interesting question.",
-        "Let me think about that for a moment...",
-        "Here's what I found about your query.",
-        "Could you please provide more details?"
-    ]
+    useEffect(() => {
+        let interval
+        if (isLoading) {
+            interval = setInterval(() => {
+                setLoadingDots(prev => (prev.length < 3 ? prev + '.' : '.'))
+            }, 500)
+        } else {
+            clearInterval(interval)
+        }
+        return () => clearInterval(interval)
+    }, [isLoading])
 
-    const handleSubmit = () => {
+    const handleSubmit = async () => {
         if (!input.trim()) return
-
         // Add user message
         const newMessages = [...messages, { role: 'user', content: input }]
         setMessages(newMessages)
         setInput('')
-
-        // Simulate AI response
-        setTimeout(() => {
-        const randomResponse = mockResponses[Math.floor(Math.random() * mockResponses.length)]
-        setMessages([...newMessages, { role: 'assistant', content: randomResponse }])
-        }, 1000)
+        // AI response
+        setIsLoading(true)
+        const aiResponse = await getAiResponse(input)
+        setIsLoading(false)
+        setMessages([...newMessages, { role: 'assistant', content: aiResponse }])
     }
 
     return (
         <Window bottomInset customColor="#0d0d0d" direction="column">
             <View padding="small" gap="10px" direction="column" grow={1} marginTop="large">
                 {messages.map((message, index) => (
-                    <View key={index} display="flex" direciton="row" justifyContent={message.role === 'user' ? 'end' : 'start'}>
+                    <View key={index} display="flex" direction="row" justifyContent={message.role === 'user' ? 'end' : 'start'}>
                         <View maxWidth="80%" padding="small" backgroundColor={message.role === 'user' ? 'primary-500' : 'neutral-300'} borderRadius="small">
                             <Text color={message.role === 'user' ? 'neutral-300' : 'primary-500'}>{message.content}</Text>
                         </View>
                     </View>
                 ))}
+                {isLoading && (
+                    <View display="flex" direction="row" justifyContent="start">
+                        <View maxWidth="80%" padding="small" backgroundColor="neutral-300" borderRadius="small">
+                            <Text color="primary-500">EItri is forging your answer{loadingDots}</Text>
+                        </View>
+                    </View>
+                )}
             </View>
-
-            <View padding="small" border="neutral-100" borderTopWidth="hairline" overflowY="auto">
+            <View padding="small" borderColor="neutral-500" borderTopWidth="hairline" overflowY="auto">
                 <View direction="row" gap="10px">
-                    <View position="relative" display="flex" alignItems="center" width="100%">
+                    <View position="relative" display="flex" alignItems="center" width="100%" backgroundColor="neutral-300" borderRadius="small" height="50" borderColor="primary-500" borderWidth={isInputFocused ? "hairline" : ""}>
                         <Input
                             type="text"
                             inputMode="text"
                             value={input}
                             onChange={value => setInput(value)}
-                            placeholder="Digite sua mensagem..."    
+                            placeholder="Type your message..."
+                            onFocus={() => setIsInputFocused(true)}
+                            onBlur={() => setIsInputFocused(false)}
+                            borderHidden={true}
                         />
                         <Touchable onPress={handleSubmit}>
-                            <View customColor="#FFFFFF" padding="small" borderRadius="small" direction="row" gap="5px" alignItems="center">
-                                <Text color="neutral-100">Enviar</Text>
-                                {/* <Image width={20} height={20} src={starIcon} /> */}
+                            <View backgroundColor="primary-500" padding="small" borderRadius="small" direction="row" gap="5px" alignItems="center">
+                                <Image width={20} height={20} src={sendIcon} />
                             </View>
                         </Touchable>
                     </View>
@@ -69,4 +85,3 @@ export default function Home() {
         </Window>
     )
 }
-
